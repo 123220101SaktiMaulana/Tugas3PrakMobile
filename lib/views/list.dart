@@ -84,6 +84,13 @@ Widget build(BuildContext context) {
               },
               child: const Text("Kara"),
             ),
+            const SizedBox(width: 10),
+            ElevatedButton(
+              onPressed: () {
+                _fetchData("characters");
+              },
+              child: const Text("Characters"),
+            ),
           ],
         ),
         Expanded(
