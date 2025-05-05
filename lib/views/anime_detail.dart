@@ -40,30 +40,72 @@ class _DetailScreenState extends State<DetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        title: const Text("Detail"),
+        title: const Text("Anime Detail"),
+        backgroundColor: Colors.deepPurple,
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _errorMessage != null
-              ? Center(child: Text("Error: $_errorMessage"))
+              ? Center(
+                  child: Text(
+                    "Error: $_errorMessage",
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                )
               : _detailData != null
-                  ? Column(
-                      children: [
-                        Image.network(
-                          _detailData!['images'][0] ??
-                              'https://placeholder.co/600x400',
-                        ),
-                        Text("Name: ${_detailData!['name']}"),
-                        Text(
-                          "Kekkei Genkai: ${_detailData!['personal']['kekkeiGenkai'] ?? 'Empty'}",
-                        ),
-                        Text(
-                          "Titles: ${_detailData!['personal']['titles']}",
-                        ),
-                      ],
+                  ? SingleChildScrollView(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          // Gambar tidak terpotong
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: Image.network(
+                              _detailData!['images'][0] ??
+                                  'https://via.placeholder.com/600x400',
+                              width: double.infinity,
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            elevation: 4,
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    _detailData!['name'] ?? "Unknown",
+                                    style: const TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    "Kekkei Genkai: ${_detailData!['personal']['kekkeiGenkai'] ?? 'None'}",
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
+                                  const SizedBox(height: 6),
+                                  Text(
+                                    "Titles: ${(_detailData!['personal']['titles'] as List<dynamic>?)?.join(', ') ?? 'None'}",
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     )
-                  : const Text("No Data Available"),
+                  : const Center(child: Text("No Data Available")),
     );
   }
 }
